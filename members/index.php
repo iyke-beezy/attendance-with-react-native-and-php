@@ -21,8 +21,8 @@
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <section>
                         <div class="jumbotron jumbotron-fluid">
-                        <div class="container">
-                        <h1 class="display-4">Hello, <?php echo $username;?>!</h1>
+                        <div class="container">         
+                        <h1 class="display-4">Hello, <?php /* Placeholder for the username of admin */ echo "Username" //$username;?>!</h1>
                         <p class="lead">This is your dashboard to receive latest reports on your account.</p>
                         <hr class="my-4">
                         <p>Below is a cast of recent news</p>
@@ -33,11 +33,9 @@
                     <div class="card-body">
                         
                             <div class="row">
-                            <div class="col-md-7" id = "referral_details">
-                                <h5>Referrals</h5>
+                                <h5>Attendance</h5>
                                 <div class="separator"></div>
                                 <div id="tol">
-                                <div id="referral">
                                     <div class="overview_referral">
                                     <div class="overview_Referral_count">
                                         <div class="Referral_count"><?php echo $referral_count; ?></div> 
@@ -51,48 +49,6 @@
                                     <p>Referral code activated <?php echo $referral_count; ?> times</p>
                                 </div>
                                 </div><!--#referral-->
-                                <div id="analytics">
-                                        <div id="#bronze">
-                                            <div class="percentage"><?php echo (int)$bpercent; ?>%</div> 
-                                            <div class="analytics-text">
-                                                <p><strong><?php echo $bronze_no; ?></strong> referred clients purchased the <strong>bronze</strong> package.</p> 
-                                                <div class="progress">
-                                                    <div class="progress_bar" style="width: <?php echo (int)$bpercent; ?>%;">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                        <div id="#silver">
-                                            <div class="percentage"><?php echo (int)$spercent; ?>%</div> 
-                                            <div class="analytics-text">
-                                                <p><strong><?php echo $silver_no; ?></strong> referred clients purchased the <strong>silver</strong> package.</p> 
-                                                <div class="progress">
-                                                    <div class="progress_bar" style="width: <?php echo (int)$spercent; ?>%;">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                        <div id="#gold">
-                                            <div class="percentage"><?php echo (int)$gpercent; ?>%</div> 
-                                            <div class="analytics-text">
-                                                <p><strong><?php echo $gold_no; ?></strong> referred clients purchased the <strong>gold</strong> package.</p> 
-                                                <div class="progress">
-                                                    <div class="progress_bar" style="width: <?php echo (int)$gpercent; ?>%;">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                        <div id="#nopurchase">
-                                            <div class="percentage"><?php echo (int)$none_percent; ?>%</div> 
-                                            <div class="analytics-text">
-                                                <p><strong><?php echo $none_num; ?></strong> referred clients purchased <strong>no</strong> package.</p> 
-                                                <div class="progress">
-                                                    <div class="progress_bar" style="width: <?php echo (int)$none_percent; ?>%;">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                </div> <!--analytics-->
                             </div>
                             </div>
                             <div class="col-md-1"></div>
