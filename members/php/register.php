@@ -40,64 +40,38 @@ if($stmt = $con->prepare('SELECT id FROM members WHERE fname = ? AND lname = ? A
             $id = substr(str_shuffle(uniqid()), 0, 6); //shuffle the id generated and take the first 6 values
             $stmt->bind_param('sssss', $id, $_POST['fname'], $_POST['lname'], $_POST['oname'], $_POST['contact']);
             $stmt->execute();
-            $image = '';
+            $_SESSION['qrcode_id'] = $id;
 
             //generate qrcode now
-            ?>
-                <html>
-    <head>
-        <style>
-            #qrcode {
-  width:160px;
-  height:160px;
-  margin-top:15px;
-}
-        </style>
-    </head>
-    <body>
-        
-
-<div id="qrcode"></div>
-
-<script src= "../js/qrcode.js"></script>
-<script type="text/javascript">
-var qrcode = new QRCode("qrcode");
-
-function makeCode () {      
-    var elText = "http//hteo.com"
-    return qrcode.makeCode(elText);
-}
-makeCode();
-var filename = "".<?php echo $id?>
-saveBase64AsFile(base64, fileName) {
-
-var link = document.createElement("a");
-
-link.setAttribute("href", base64);
-link.setAttribute("download", fileName);
-link.click();
-}
-
-/*$("#text").
-    on("blur", function () {
-        makeCode();
-    }).
-    on("keydown", function (e) {
-        if (e.keyCode == 13) {
-            makeCode();
-        }
-    });*/
-
-
-</script>
-    </body>
-</html>
-                
-            <?php
             
             }
         }
     
 }
+
+$con->close();
+ob_end_flush();
 ?>
 
+            <html>
+                <head></head>
+                <body>
+                    <div id = "qrcode"></div>
+                    <form action="saveqrcode.php" name = "Genqrcode" method="POST">
+                    <input type="hidden" value="" name="imgSrc" />
+                    </form>
+                    <script src= "../js/jquery-3.3.1.min.js"></script>
+                    <script src='../js/qrcode.js'></script>
+                    <script type='text/javascript'>
+                        
+                        var qrcode = new QRCode('qrcode');
+                        var elText = 'http//ptbci.com/members/member = "' + <?php echo $id?> + '"';
+                        qrcode.makeCode(elText);
+                        var canvas = $('#qrcode canvas');
+                        console.log(canvas);
+                        var img = canvas.get(0).toDataURL("image/png");
+                        document.forms["Genqrcode"].elements["imgSrc"].value = img;
+                        document.forms["Genqrcode"].submit();
+                    </script>
+                    </body>
+            </html>
