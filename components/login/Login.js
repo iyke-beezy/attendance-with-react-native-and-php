@@ -23,7 +23,7 @@ export default class Login extends Component {
         const {username} = this.state;
         const {password} = this.state
 
-        fetch('http://192.168.8.105/simple-qr-code-scanner/backend/login.php', {
+        fetch('http://192.168.8.105/simple-qr-code-scanner/backend/php/applogin.php', {
             method : 'POST',
             headers : {
                 'Accept' : 'application/json',
