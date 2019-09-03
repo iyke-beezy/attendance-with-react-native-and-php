@@ -345,34 +345,8 @@
                                 <button class="btn btn-link"></button>
                             </div>
                             
-                            <div class="form-group m-0">\
-                                <button id="qrcode">Generate Qrcode</button>
-                                <script>
-                                    var qrcode = new QRCode("qrcode");
-                                    function makeCode () {      
-                                        var elText = document.getElementById("Qr");
-                                        
-                                        if (!elText.value) {
-                                            alert("Input a text");
-                                            elText.focus();
-                                            return;
-                                        }
-                                        
-                                        qrcode.makeCode(elText.value);
-                                    }
-
-                                    makeCode();
-
-                                    $("#text").
-                                        on("blur", function () {
-                                            makeCode();
-                                        }).
-                                        on("keydown", function (e) {
-                                            if (e.keyCode == 13) {
-                                                makeCode();
-                                            }
-                                        });
-                                </script>
+                            <div class="form-group m-0">
+                                
                                 <button class="btn btn-link" type="submit" name = "submit">Register</button>
                             </div>
                         </form>

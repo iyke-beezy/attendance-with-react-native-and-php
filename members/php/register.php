@@ -33,10 +33,71 @@ if($stmt = $con->prepare('SELECT id FROM members WHERE fname = ? AND lname = ? A
         die('Member already exists');
     }
 
+    //else add member to the database
     else {
-        if($stmt = $con->prepare('INSERT INTO members VALUES(?,?,?,?) ')) {
-            
+        if($stmt = $con->prepare('INSERT INTO members VALUES(?,?,?,?,?) ')) {
+            //id is generated from uniqid, a php function that generates random digits and letters
+            $id = substr(str_shuffle(uniqid()), 0, 6); //shuffle the id generated and take the first 6 values
+            $stmt->bind_param('sssss', $id, $_POST['fname'], $_POST['lname'], $_POST['oname'], $_POST['contact']);
+            $stmt->execute();
+            $image = '';
+
+            //generate qrcode now
+            ?>
+                <html>
+    <head>
+        <style>
+            #qrcode {
+  width:160px;
+  height:160px;
+  margin-top:15px;
+}
+        </style>
+    </head>
+    <body>
+        
+
+<div id="qrcode"></div>
+
+<script src= "../js/qrcode.js"></script>
+<script type="text/javascript">
+var qrcode = new QRCode("qrcode");
+
+function makeCode () {      
+    var elText = "http//hteo.com"
+    return qrcode.makeCode(elText);
+}
+makeCode();
+var filename = "".<?php echo $id?>
+saveBase64AsFile(base64, fileName) {
+
+var link = document.createElement("a");
+
+link.setAttribute("href", base64);
+link.setAttribute("download", fileName);
+link.click();
+}
+
+/*$("#text").
+    on("blur", function () {
+        makeCode();
+    }).
+    on("keydown", function (e) {
+        if (e.keyCode == 13) {
+            makeCode();
         }
-    }
+    });*/
+
+
+</script>
+    </body>
+</html>
+                
+            <?php
+            
+            }
+        }
+    
 }
 ?>
+

@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <style>
+            #qrcode {
+  width:160px;
+  height:160px;
+  margin-top:15px;
+}
+        </style>
+    </head>
+    <body>
+        
+
+<div id="qrcode"></div>
+<form action="test.php" name = "test" method="POST">
+    <input type="hidden" value="" name="imgSrc" />
+</form>
+<script src= "../js/jquery-3.3.1.min.js"></script>
+<script src= "../js/qrcode.js"></script>
+<script type="text/javascript">
+var qrcode = new QRCode("qrcode");
+
+function makeCode () {      
+    var elText = "http//hteo.com"
+    
+    
+    
+    qrcode.makeCode(elText);
+}
+
+makeCode();
+var button = document.getElementById('saveImage');
+var canvas = $('#qrcode canvas');
+var filename = "test.jpg"
+    console.log(canvas);
+    var img = canvas.get(0).toDataURL("image/png");
+    document.write('<a href="'+img+'" download=\' test.jpg \'>file</a>');
+
+document.forms["test"].elements["imgSrc"].value = img;
+document.forms["test"].submit();
+
+
+
+/*$("#text").
+    on("blur", function () {
+        makeCode();
+    }).
+    on("keydown", function (e) {
+        if (e.keyCode == 13) {
+            makeCode();
+        }
+    });*/
+
+
+</script>
+    </body>
+</html>
