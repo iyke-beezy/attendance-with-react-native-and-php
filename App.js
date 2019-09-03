@@ -21,8 +21,27 @@ export default class App extends Component {
 
   _handleBarCodeRead = result => {
     if (result.data !== this.state.lastScannedUrl) {
+      const{member} = result.data
+      fetch('http://192.168.8.105/simple-qr-code-scanner/backend/php/qrcodes.php', {
+        method : 'POST',
+        headers : {
+            'Accept' : 'application/json',
+            'content-type': 'application/json'
+        },
+        body : JSON.stringify({
+            qrcodeno: member
+        })
+    })
+    .then((response)=> response.json())
+        .then((responseJson) => {
+            alert(responseJson)
+            this.setState({ lastScannedUrl: result.data });
+        })
+        .catch((error) => {
+            console.error(error)
+        })
       LayoutAnimation.spring();
-      this.setState({ lastScannedUrl: result.data });
+      
     }
   };
 
