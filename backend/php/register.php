@@ -33,7 +33,7 @@ if (preg_match('/[A-Za-z0-9]+/', $_POST['username']) == 0) {
     echo('Username is not valid!');
     
 }
-if (strlen($_POST['password']) > 20 || strlen($_POST['password']) < 8) {
+if (strlen($_POST['password']) > 20 || strlen($_POST['password']) < 5) {
     echo('Password must be between 5 and 20 characters long!');
     
 }
@@ -56,7 +56,7 @@ if ($stmt = $con->prepare('SELECT id, password FROM users WHERE username = ?')) 
             $id = uniqid();
             $stmt->bind_param('sss',$id, $_POST['username'], $password);
             $stmt->execute();
-            
+            $_SESSION['loggedin'] = TRUE;
             $_SESSION['user_id'] = $id;
             header('Location: ../profile.php');
             exit();

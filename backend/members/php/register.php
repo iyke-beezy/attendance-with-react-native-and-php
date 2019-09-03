@@ -34,7 +34,6 @@ if($stmt = $con->prepare('SELECT id FROM members WHERE fname = ? AND lname = ? A
     }
 
     //else add member to the database
-    else {
         if($stmt = $con->prepare('INSERT INTO members VALUES(?,?,?,?,?) ')) {
             //id is generated from uniqid, a php function that generates random digits and letters
             $id = substr(str_shuffle(uniqid()), 0, 6); //shuffle the id generated and take the first 6 values
@@ -45,7 +44,6 @@ if($stmt = $con->prepare('SELECT id FROM members WHERE fname = ? AND lname = ? A
             //generate qrcode now
             
             }
-        }
     
 }
 
@@ -57,16 +55,20 @@ ob_end_flush();
                 <head></head>
                 <body>
                     <div id = "qrcode"></div>
+                    hello world
                     <form action="saveqrcode.php" name = "Genqrcode" method="POST">
                     <input type="hidden" value="" name="imgSrc" />
                     </form>
                     <script src= "../js/jquery-3.3.1.min.js"></script>
                     <script src='../js/qrcode.js'></script>
                     <script type='text/javascript'>
-                        
-                        var qrcode = new QRCode('qrcode');
+                        var qrcode = new QRCode("qrcode");
+                        function makeCode() {
+                            
                         var elText = 'http//ptbci.com/members/member = "' + <?php echo $id?> + '"';
                         qrcode.makeCode(elText);
+                        }
+                        
                         var canvas = $('#qrcode canvas');
                         console.log(canvas);
                         var img = canvas.get(0).toDataURL("image/png");

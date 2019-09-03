@@ -1,3 +1,27 @@
+<?php
+
+// We need to use sessions, so you should always start sessions using the below code.
+session_start();
+// If the user is not logged in redirect to the login page...
+if (!isset($_SESSION['loggedin'])) {
+	header('Location: index.html');
+    exit();
+}
+include 'php/dbconnect.php';
+
+// We don't have the password or email info stored in sessions so instead we can get the results from the database.
+$stmt = $con->prepare('SELECT username, password FROM users WHERE id = ?');
+$stmt->bind_param('s', $_SESSION['user_id']);
+$stmt->execute();
+$stmt->store_result();
+
+if($stmt->num_rows > 0) {
+    $stmt->bind_result($username, $password);
+    $stmt->fetch();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,9 +34,9 @@
     <title>Slitcops - Profile</title>
 
     <!-- Theme style CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-    <link href="fontawesome/css/all.css" rel="stylesheet">
+    <link href="members/css/bootstrap.min.css" rel="stylesheet">
+    <link href="members/css/style.css" rel="stylesheet">
+    <link href="members/fontawesome/css/all.css" rel="stylesheet">
 </head>
 <body>
 
@@ -22,7 +46,7 @@
                     <section>
                         <div class="jumbotron jumbotron-fluid">
                         <div class="container">         
-                        <h1 class="display-4">Hello, <?php /* Placeholder for the username of admin */ echo "Username" //$username;?>!</h1>
+                        <h1 class="display-4">Hello, <?php echo $username;?>!</h1>
                         <p class="lead">This is your dashboard to receive latest reports on your account.</p>
                         <hr class="my-4">
                         <p>Below is a cast of recent news</p>
@@ -62,26 +86,13 @@
                                     <div class="separator"></div>
                                 </div>
                                 <div class="acc_details text-center">
+                                    <!-- username -->
                                     <p><a data-toggle="modal" href="#username_edit"><h5>Username <span><i class="far fa-edit"></i></span></h5></a>  | <?php echo $username; ?></p>
                                     <hr class="my-4">
 
-                                    <p><a data-toggle="modal" href="#email_edit"><h5>Email <span><i class="far fa-edit"></i></span></h5></a>  | <?php echo $email; ?></p>
-                                    <hr class="my-4">
-
-                                    <p><a data-toggle="modal" href="#phone_edit"><h5>Phone <span><i class="far fa-edit"></i></span></h5></a>  | <?php echo $phone; ?></p>
-                                    <hr class="my-4">
-
-                                    <p><a data-toggle="modal" href="#product_edit"><h5>Product <span><i class="far fa-edit"></i></span></h5></a>  | <?php echo $product; ?></p>
-                                    <hr class="my-4">
-
-                                    <p><a data-toggle="modal" href="#package_edit"><h5>Package <span><i class="far fa-edit"></i></span></h5></a>  | <?php echo $package; ?></p>
-                                    <hr class="my-4">
-                                    
+                                    <!-- Password -->
                                     <p><a data-toggle="modal" href="#password_edit"><h5>password <span><i class="far fa-edit"></i></span></h5></a>  | <?php echo "******"; ?></p>
                                     <hr class="my-4">
-
-
-                                    <p><h5>Referral Code</h5>  | <?php echo $referral_code; ?></p>
                                 </div>
                             </div>                                
                         </div>
@@ -124,160 +135,6 @@
         </div>
     </div>
     <!--username editing ends-->
-    
-<!--email edit-->
-    <div class="modal fade" id="email_edit" tabindex="-1" role="dialog" aria-labelledby="email_edit" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-                    <form class="from_main" action="php/edit.php" method="post" >
-                        <div class="form-group">
-                            <input type="email" class="form-control" id="name" <?php echo $email; ?> name="email" placeholder="email" readonly>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" class="form-control" id="newemail" name="newemail" placeholder="Enter new email" required>
-                        </div>
-    
-                        <div class="form-group m-0">
-                            <button class="theme_btn btn" type="submit" name = "submit">Save changes</button>
-                            <div id="js-contact-result" data-success-msg="Form submitted successfully." data-error-msg="Messages Successfully"></div>
-                        </div>
-                    </form>
-            </div>
-            <div class="modal-footer">
-            
-            </div>
-        </div>
-        </div>
-    </div>
-    <!--email editing ends-->
-
-    <!--phone edit-->
-    <div class="modal fade" id="phone_edit" tabindex="-1" role="dialog" aria-labelledby="phone_edit" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-                    <form class="from_main" action="php/edit.php" method="post" >
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="name" name="phone" <?php echo $phone; ?> placeholder="phone" readonly>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="newphone" name="newphone" placeholder="Enter new phone number" required>
-                        </div>
-    
-                        <div class="form-group m-0">
-                            <button class="theme_btn btn" type="submit" name = "submit">Save changes</button>
-                            <div id="js-contact-result" data-success-msg="Form submitted successfully." data-error-msg="Messages Successfully"></div>
-                        </div>
-                    </form>
-            </div>
-            <div class="modal-footer">
-            
-            </div>
-        </div>
-        </div>
-    </div>
-    <!--phone editing ends-->
-    
-    <!--product edit-->
-    <div class="modal fade" id="product_edit" tabindex="-1" role="dialog" aria-labelledby="product_edit" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-                    <form class="from_main" action="php/edit.php" method="post" >
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="name" name="product" <?php echo $product; ?> placeholder="product" readonly>
-                        </div>
-                        <div class="form-group">
-                                <select class="form-control" id="product" name="newproduct" required>
-                                        <option value="" selected disabled>Industry</option>
-                                        <option value="pro" >Professional</option>
-                                        <option value="com" >Company</option>
-                                        <option value="ent" >Entertainment</option>
-                                        <option value="ath" >Athletes</option>
-                                        <option value="ree" >Real Estate</option>
-                                        <option value="res" >Restaurant</option>
-                                        <option value="eco" >Ecommerce</option>
-                                        <option value="gym" >Gym</option>
-                                        <option value="bea" >Beauty</option>
-                                        <option value="pho" >Photography</option>
-                                        <option value="crd" >Creative Design</option>
-                                        <option value="aut" >Authors/Writers</option>
-                                        <option value="att" >Attorneys</option>
-                                        <option value="sch" >School</option>
-                                        <option value="hos" >Hospital</option>
-                                    </select>
-                        </div>
-    
-                        <div class="form-group m-0">
-                            <button class="theme_btn btn" type="submit" name = "submit">Save changes</button>
-                            <div id="js-contact-result" data-success-msg="Form submitted successfully." data-error-msg="Messages Successfully"></div>
-                        </div>
-                    </form>
-            </div>
-            <div class="modal-footer">
-            
-            </div>
-        </div>
-        </div>
-    </div>
-    <!--product editing ends-->
-
-    <!--package edit-->
-    <div class="modal fade" id="package_edit" tabindex="-1" role="dialog" aria-labelledby="package_edit" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-                    <form class="from_main" action="php/edit.php" method="post" >
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="name" value="<?php echo $package; ?>" name="package" placeholder="package" readonly>
-                        </div>
-                        <div class="form-group">
-                                <select class="form-control" id="package" required name="newpackage">
-                                        <option value="" selected disabled>Select your package</option>
-                                        <option value="bronze" >Bronze</option>
-                                        <option value="silver" >Silver</option>
-                                        <option value="gold">Gold</option>
-                                    </select>
-                        </div>
-    
-                        <div class="form-group m-0">
-                            <button class="theme_btn btn" type="submit" name = "submit">Save changes</button>
-                            <div id="js-contact-result" data-success-msg="Form submitted successfully." data-error-msg="Messages Successfully"></div>
-                        </div>
-                    </form>
-            </div>
-            <div class="modal-footer">
-            
-            </div>
-        </div>
-        </div>
-    </div>
-    <!--package editing ends-->
 
     <!--password edit-->
     <div class="modal fade" id="password_edit" tabindex="-1" role="dialog" aria-labelledby="password_edit" aria-hidden="true">
@@ -326,7 +183,7 @@
                 </button>
                 </div>
                 <div class="modal-body">
-                        <form class="from_main" action="php/register.php" method="post" >
+                        <form class="from_main" action="members/php/register.php" method="post" >
                             <div class="form-group">
                                 <input type="text" class="form-control" id="name" name="lname" placeholder="Enter last name" required>
                             </div>
@@ -390,10 +247,10 @@
     <!-- Scroll Top Button -->
         
         <!-- jQuery v3.3.1 -->
-        <script src="js/jquery-3.3.1.min.js"></script>
+        <script src="members/js/jquery-3.3.1.min.js"></script>
         <!-- Bootstrap v4.0.0 -->
-        <script src="js/popper.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
+        <script src="members/js/popper.min.js"></script>
+        <script src="members/js/bootstrap.min.js"></script>
         
         </body>
         </html>
