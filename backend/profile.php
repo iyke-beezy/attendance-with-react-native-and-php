@@ -1,5 +1,4 @@
 <?php
-
 // We need to use sessions, so you should always start sessions using the below code.
 session_start();
 // If the user is not logged in redirect to the login page...
@@ -39,8 +38,15 @@ if($stmt->num_rows > 0) {
     <link href="members/fontawesome/css/all.css" rel="stylesheet">
 </head>
 <body>
-
-<div class="main">                
+<div class="main">      
+<?php if(isset($_GET['message'])) { ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>New member added Successful</strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<?php }?>          
               <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <section>
@@ -49,7 +55,7 @@ if($stmt->num_rows > 0) {
                         <h1 class="display-4">Hello, <?php echo $username;?>!</h1>
                         <p class="lead">This is your dashboard to receive latest reports on your account.</p>
                         <hr class="my-4">
-                        <p>Below is a cast of recent news</p>
+                        <p>Below is a cast of recent recorded attendance</p>
                         </div><!--container-->
                     </div><!--jumbotron [opening title]-->
                 </section>
