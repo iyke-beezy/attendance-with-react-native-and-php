@@ -34,8 +34,8 @@ export default class App extends Component {
     })
     .then((response)=> response.json())
         .then((responseJson) => {
-            alert(responseJson)
-            this.setState({ lastScannedUrl: result.data });
+          this.setState({ lastScannedUrl: result.data });  
+          alert(responseJson)
         })
         .catch((error) => {
             console.error(error)
