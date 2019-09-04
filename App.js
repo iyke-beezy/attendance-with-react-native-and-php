@@ -42,7 +42,7 @@ export default class App extends Component {
           qrcodeno: qrcode
       }
       //fecth qrcode information from qrcodes.php
-      fetch('http://192.168.43.93/react-native/simple-qr-code-scanner/backend/php/qrcodes.php', {
+      fetch('https://www.slitcorp.com/attendance/qrcodes.php', {
         method : 'POST',
         headers: { "Content-type": "application/x-www-form-urlencoded"},
         body: formEncode(member)
