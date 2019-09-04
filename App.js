@@ -6,6 +6,7 @@ export default class App extends Component {
   state = {
     hasCameraPermission: null,
     lastScannedUrl: null,
+    qrcodeInfo: null
   };
 
   componentDidMount() {
@@ -19,23 +20,38 @@ export default class App extends Component {
     });
   };
 
+  //extract the actual qrcode from the scanned url
+  obtainqrcode = (url) => {
+    var spliturl = url.split("/");
+      member = spliturl[spliturl.length - 1].split("=")
+      return member[member.length - 1]
+  }
+
+  //encode qrcode as form data to be sent to server for processing
+  formEncode = (obj) => {
+    var str = [];
+        for(var p in obj)
+        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        return str.join("&");
+  }
+
   _handleBarCodeRead = result => {
     if (result.data !== this.state.lastScannedUrl) {
-      const{member} = result.data
-      fetch('http://192.168.8.105/simple-qr-code-scanner/backend/php/qrcodes.php', {
+      var qrcode = this.obtainqrcode(result.data)
+      const member = {
+          qrcodeno: qrcode
+      }
+      //fecth qrcode information from qrcodes.php
+      fetch('http://192.168.43.93/react-native/simple-qr-code-scanner/backend/php/qrcodes.php', {
         method : 'POST',
-        headers : {
-            'Accept' : 'application/json',
-            'content-type': 'application/json'
-        },
-        body : JSON.stringify({
-            qrcodeno: member
-        })
+        headers: { "Content-type": "application/x-www-form-urlencoded"},
+        body: formEncode(member)
     })
     .then((response)=> response.json())
         .then((responseJson) => {
-          this.setState({ lastScannedUrl: result.data });  
-          alert(responseJson)
+          this.setState({ lastScannedUrl: result.data });
+          this.setState({qrcodeInfo: responseJson})  
+          alert(responseJson['fname']+ " " + responseJson['oname'] + " " + responseJson['lname'])
         })
         .catch((error) => {
             console.error(error)
@@ -98,7 +114,7 @@ export default class App extends Component {
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.url} onPress={this._handlePressUrl}>
           <Text numberOfLines={1} style={styles.urlText}>
-            {this.state.lastScannedUrl}
+            {this.state.qrcodeInfo['fname']+ " " + this.state.qrcodeInfo['oname'] + " " + this.state.qrcodeInfo['lname']}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
