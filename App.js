@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Alert, Linking, Dimensions, LayoutAnimation, Text, Button, View, StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 import { BarCodeScanner, Permissions} from 'expo';
 
+
 export default class App extends Component {
   state = {
     hasCameraPermission: null,
@@ -53,7 +54,7 @@ fetchAsync = async (scannedurl) => {
   }
   _handleBarCodeRead = result => {
     if (result.data !== this.state.lastScannedUrl) {
-      
+      console.log(this._obtainqrcode(result.data))
       this.fetchAsync(result.data)
       .then(data => console.log(data))
       .catch(reason => console.log(reason.message))
@@ -81,7 +82,6 @@ fetchAsync = async (scannedurl) => {
   render() {
     return (
       <View style={styles.container}>
-      <Button title="Login" style={styles.loginButton} />
         {this.state.hasCameraPermission === null
           ? <Text>Requesting for camera permission</Text>
           : this.state.hasCameraPermission === false
@@ -187,3 +187,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+
