@@ -21,43 +21,60 @@ export default class App extends Component {
   };
 
   //extract the actual qrcode from the scanned url
-  obtainqrcode = (url) => {
+  _obtainqrcode = (url) => {
     var spliturl = url.split("/");
-      member = spliturl[spliturl.length - 1].split("=")
+    var member = spliturl[spliturl.length - 1].split("=")
       return member[member.length - 1]
   }
 
   //encode qrcode as form data to be sent to server for processing
-  formEncode = (obj) => {
+  _formEncode = (obj) => {
     var str = [];
         for(var p in obj)
         str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
         return str.join("&");
   }
 
-  _handleBarCodeRead = result => {
-    if (result.data !== this.state.lastScannedUrl) {
-      var qrcode = this.obtainqrcode(result.data)
-      const member = {
+fetchAsync = async (scannedurl) => {
+  var qrcode = this._obtainqrcode(scannedurl)
+  const member = {
           qrcodeno: qrcode
       }
-      //fecth qrcode information from qrcodes.php
-      fetch('https://www.slitcorp.com/attendance/qrcodes.php', {
+    // await response of fetch call
+    let response = await fetch('https://slitcorp.com/attendance/qrcodes.php', {
         method : 'POST',
         headers: { "Content-type": "application/x-www-form-urlencoded"},
-        body: formEncode(member)
+        body: this._formEncode(member)
+    });
+    // only proceed once promise is resolved
+    let data = await response.json();
+    // only proceed once second promise is resolved
+    return data;
+  }
+  _handleBarCodeRead = result => {
+    if (result.data !== this.state.lastScannedUrl) {
+      
+      this.fetchAsync(result.data)
+      .then(data => console.log(data))
+      .catch(reason => console.log(reason.message))
+      //fecth qrcode information from qrcodes.php
+      
+      /*fetch('https://www.slitcorp.com/attendance/qrcodes.php', {
+        method : 'POST',
+        headers: { "Content-type": "application/x-www-form-urlencoded"},
+        body: this._formEncode(member)
     })
     .then((response)=> response.json())
         .then((responseJson) => {
-          this.setState({ lastScannedUrl: result.data });
+          console.log(responseJson)
           this.setState({qrcodeInfo: responseJson})  
           alert(responseJson['fname']+ " " + responseJson['oname'] + " " + responseJson['lname'])
         })
         .catch((error) => {
             console.error(error)
-        })
+        })*/
       LayoutAnimation.spring();
-      
+      this.setState({ lastScannedUrl: result.data });
     }
   };
 
@@ -114,7 +131,7 @@ export default class App extends Component {
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.url} onPress={this._handlePressUrl}>
           <Text numberOfLines={1} style={styles.urlText}>
-            {this.state.qrcodeInfo['fname']+ " " + this.state.qrcodeInfo['oname'] + " " + this.state.qrcodeInfo['lname']}
+            {this.state.lastScannedUrl}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -150,7 +167,7 @@ const styles = StyleSheet.create({
     left: 50,
     right: 2,
     padding: 10,
-    flexDirection: row,
+    flexDirection: 'row',
     top: 0
   },
   url: {

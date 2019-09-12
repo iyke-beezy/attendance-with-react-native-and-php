@@ -2,7 +2,7 @@
   "name": "simple-qr-code-scanner",
   "version": "0.0.0",
   "description": "No description",
-  "author": null,
+  "author": "null",
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "dependencies": {
