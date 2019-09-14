@@ -65,7 +65,7 @@ ob_end_flush();
                         var qrcode = new QRCode("qrcode");
                         function makeCode() {
                             
-                        var elText = 'https://ptbci.com/members/member = "' + <?php echo $id?> + '"';
+                        var elText = 'tst://member = "' + <?php echo $id?> + '"';
                         console.log(elText);
                         qrcode.makeCode(elText);
                         }

@@ -36,8 +36,7 @@ export default class App extends Component {
         return str.join("&");
   }
 
-fetchAsync = async (scannedurl) => {
-  var qrcode = this._obtainqrcode(scannedurl)
+fetchAsync = async (qrcode) => {
   const member = {
           qrcodeno: qrcode
       }
@@ -54,10 +53,12 @@ fetchAsync = async (scannedurl) => {
   }
   _handleBarCodeRead = result => {
     if (result.data !== this.state.lastScannedUrl) {
-      console.log(this._obtainqrcode(result.data))
-      this.fetchAsync(result.data)
-      .then(data => console.log(data))
-      .catch(reason => console.log(reason.message))
+    //obtain qrcode number from the scanned data
+      var qrcode = this._obtainqrcode(result.data)
+      //fetch result from the server with the function fetchAsync with the qrcode no scanned
+      this.fetchAsync(qrcode)
+      .then(data => console.log(data)) //function to handle the response from the server
+      .catch(reason => console.log(reason.message)) // Handle any errors that may arise from fetch 
       //fecth qrcode information from qrcodes.php
       
       /*fetch('https://www.slitcorp.com/attendance/qrcodes.php', {
@@ -75,7 +76,7 @@ fetchAsync = async (scannedurl) => {
             console.error(error)
         })*/
       LayoutAnimation.spring();
-      this.setState({ lastScannedUrl: result.data });
+      this.setState({ lastScannedUrl: result.data }); //Set the lastScannedUrl state to the scanned url
     }
   };
 

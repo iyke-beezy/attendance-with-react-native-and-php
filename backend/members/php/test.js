@@ -27,14 +27,15 @@ function formEncode(obj) {
     str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
     return str.join("&");
 }
-var url = "https://www.ptbci.com/members?member=011566"
-var qrcode = obtainqrcode(url);
+var scannedurl = "https://www.ptbci.com/members?member=901446"
+
+// async function
+async function fetchAsync (url) {
+    var scannedurl = "https://www.ptbci.com/members?member=901446"
+var qrcode = obtainqrcode(scannedurl);
 const member = {
     qrcodeno: qrcode
 }
-
-// async function
-async function fetchAsync (url, member) {
     // await response of fetch call
     let response = await fetch(url, {
         method : 'POST',
@@ -47,7 +48,7 @@ async function fetchAsync (url, member) {
     return data;
   }
 var url = 'https://slitcorp.com/attendance/qrcodes.php'
-  fetchAsync(url, member)
+  fetchAsync(url)
     .then(data => console.log(data))
     .catch(reason => console.log(reason.message))
 /*const fetchAsyncA = async () => 
