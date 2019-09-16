@@ -43,7 +43,6 @@ if($stmt = $con->prepare('SELECT id FROM members WHERE fname = ? AND lname = ? A
             
 
             //generate qrcode now
-            
             }
     
 }
