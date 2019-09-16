@@ -20,65 +20,7 @@ export default class App extends Component {
       hasCameraPermission: status === 'granted',
     });
   };
-
-  //extract the actual qrcode from the scanned url
-  _obtainqrcode = (url) => {
-    var spliturl = url.split("/");
-    var member = spliturl[spliturl.length - 1].split("=")
-      return member[member.length - 1]
-  }
-
-  //encode qrcode as form data to be sent to server for processing
-  _formEncode = (obj) => {
-    var str = [];
-        for(var p in obj)
-        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-        return str.join("&");
-  }
-
-fetchAsync = async (qrcode) => {
-  const member = {
-          qrcodeno: qrcode
-      }
-    // await response of fetch call
-    let response = await fetch('https://slitcorp.com/attendance/qrcodes.php', {
-        method : 'POST',
-        headers: { "Content-type": "application/x-www-form-urlencoded"},
-        body: this._formEncode(member)
-    });
-    // only proceed once promise is resolved
-    let data = await response.json();
-    // only proceed once second promise is resolved
-    return data;
-  }
-  _handleBarCodeRead = result => {
-    if (result.data !== this.state.lastScannedUrl) {
-    //obtain qrcode number from the scanned data
-      var qrcode = this._obtainqrcode(result.data)
-      //fetch result from the server with the function fetchAsync with the qrcode no scanned
-      this.fetchAsync(qrcode)
-      .then(data => console.log(data)) //function to handle the response from the server
-      .catch(reason => console.log(reason.message)) // Handle any errors that may arise from fetch 
-      //fecth qrcode information from qrcodes.php
-      
-      /*fetch('https://www.slitcorp.com/attendance/qrcodes.php', {
-        method : 'POST',
-        headers: { "Content-type": "application/x-www-form-urlencoded"},
-        body: this._formEncode(member)
-    })
-    .then((response)=> response.json())
-        .then((responseJson) => {
-          console.log(responseJson)
-          this.setState({qrcodeInfo: responseJson})  
-          alert(responseJson['fname']+ " " + responseJson['oname'] + " " + responseJson['lname'])
-        })
-        .catch((error) => {
-            console.error(error)
-        })*/
-      LayoutAnimation.spring();
-      this.setState({ lastScannedUrl: result.data }); //Set the lastScannedUrl state to the scanned url
-    }
-  };
+  
 
   render() {
     return (
@@ -102,6 +44,72 @@ fetchAsync = async (qrcode) => {
         <StatusBar hidden />
       </View>
     );
+  }
+
+  _handleBarCodeRead = result => {
+    if (result.data !== this.state.lastScannedUrl) {
+    //obtain qrcode number from the scanned data
+      var qrcode = this._obtainqrcode(result.data)
+      
+      //fetch result from the server with the function fetchAsync with the qrcode no scanned
+      this.fetchAsync(qrcode)
+      .then(data => function() {
+        this.setState({qrcodeInfo: data})
+        alert(data['fname']+ " " + data['lname'])
+      }) //function to handle the response from the server
+      .catch(reason => console.log(reason.message)) // Handle any errors that may arise from fetch 
+      //fecth qrcode information from qrcodes.php
+      
+      /*fetch('https://www.slitcorp.com/attendance/qrcodes.php', {
+        method : 'POST',
+        headers: { "Content-type": "application/x-www-form-urlencoded"},
+        body: this._formEncode(member)
+    })
+    .then((response)=> response.json())
+        .then((responseJson) => {
+          console.log(responseJson)
+          this.setState({qrcodeInfo: responseJson})  
+          alert(responseJson['fname']+ " " + responseJson['oname'] + " " + responseJson['lname'])
+        })
+        .catch((error) => {
+            console.error(error)
+        })*/
+      LayoutAnimation.spring();
+      this.setState({ lastScannedUrl: result.data }); //Set the lastScannedUrl state to the scanned url
+    }
+  };
+
+
+fetchAsync = async (qrcode) => {
+  var qrcodeno = qrcode
+  const member = {
+          qrcodeno: qrcodeno
+      }
+    // await response of fetch call
+    let response = await fetch('https://slitcorp.com/attendance/qrcodes.php', {
+        method : 'POST',
+        headers: { "Content-type": "application/x-www-form-urlencoded"},
+        body: this._formEncode(member)
+    });
+    // only proceed once promise is resolved
+    let data = await response.json();
+    // only proceed once second promise is resolved
+    return data;
+  }
+
+    //extract the actual qrcode from the scanned url
+  _obtainqrcode = (url) => {
+    var spliturl = url.split("/");
+    var member = spliturl[spliturl.length - 1].split("=")
+      return member[member.length - 1]
+  }
+
+  //encode qrcode as form data to be sent to server for processing
+  _formEncode = (obj) => {
+    var str = [];
+        for(var p in obj)
+        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        return str.join("&");
   }
 
   _handlePressUrl = () => {
