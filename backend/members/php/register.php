@@ -58,20 +58,16 @@ ob_end_flush();
                     <form action="saveqrcode.php" name = "Genqrcode" method="POST">
                     <input type="hidden" value="" name="imgSrc" />
                     </form>
-                    <script src= "../js/jquery-3.3.1.min.js"></script>
-                    <script src='../js/qrcode.js'></script>
+                    <script src='../../../node_modules/qrcode-generator/qrcode.js'></script>
                     <script type='text/javascript'>
-                        var qrcode = new QRCode("qrcode");
-                        function makeCode() {
-                            
-                        var elText = 'tst://member = "' + <?php echo $id?> + '"';
-                        console.log(elText);
-                        qrcode.makeCode(elText);
-                        }
-                        makeCode();
-                        var canvas = $('#qrcode canvas');
-                        console.log(canvas);
-                        var img = canvas.get(0).toDataURL("image/png");
+                        var typeNumber = 4;
+                        var errorCorrectionLevel = 'L';
+                        var qr = qrcode(typeNumber, errorCorrectionLevel);
+                        var url = 'https://ptbci.com/member="'+<?php echo $id?>+'"'
+                        qr.addData(url);
+                        qr.make();
+                        var img = qr.createDataURL()
+                        document.getElementById('qrcode').innerHTML = qr.createImgTag();
                         document.forms["Genqrcode"].elements["imgSrc"].value = img;
                         document.forms["Genqrcode"].submit();
                     </script>
