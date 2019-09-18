@@ -13,7 +13,7 @@ $name = array(
 );
 
 var_dump($name);*/
-
+/*
 const fetch = require("node-fetch");
 var lastScannedUrl = {}
 obtainqrcode = (url) => {
@@ -67,3 +67,5 @@ var url = 'https://slitcorp.com/attendance/qrcodes.php'
         })
       
 */
+var date = new Date()
+console.log(date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())

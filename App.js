@@ -7,7 +7,8 @@ export default class App extends Component {
   state = {
     hasCameraPermission: null,
     lastScannedUrl: null,
-    qrcodeInfo: null
+    qrcodeInfo: null,
+    attendance : {}
   };
 
   componentDidMount() {
@@ -47,6 +48,8 @@ export default class App extends Component {
   }
 
   _handleBarCodeRead = result => {
+    var date = new Date() //keep track of the time the scanned url was scanned
+    var timestamp = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
     if (result.data !== this.state.lastScannedUrl) {
     //obtain qrcode number from the scanned data
       var qrcode = this._obtainqrcode(result.data)
@@ -54,8 +57,8 @@ export default class App extends Component {
       //fetch result from the server with the function fetchAsync with the qrcode no scanned
       this.fetchAsync(qrcode)
       .then(data => {
-        this.setState({qrcodeInfo:data})
-        console.log(this.state.qrcodeInfo['fname'])
+        this.setState({qrcodeInfo:data}) //set qrcode scanned information
+        this._markattendance(qrcode, timestamp)
       }
         ) //function to handle the response from the server
       .catch(reason => console.log(reason.message)) // Handle any errors that may arise from fetch 
@@ -129,7 +132,23 @@ fetchAsync = async (qrcode) => {
   };
 
   //mark member as present
-  _markattendance = (membercode) => {
+  _markattendance = (membercode, timestamp) => {
+    //check if member has already been added
+    if(this.state.attendance.hasOwnProperty(membercode)){
+      alert("Already marked for "+this.state.qrcodeInfo['fname'])
+    }
+    //else add to attendance
+    else {
+      //concatenate the attendance object with the scanned url
+    this.setState({
+      attendance: {
+        ...this.state.attendance,
+        [membercode]: timestamp
+      }
+    })
+    console.log(this.state.attendance)//output the attendance data
+    console.log(this.state.qrcodeInfo)
+    }
     
   }
   _handlePressCancel = () => {
