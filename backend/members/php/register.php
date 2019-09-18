@@ -63,7 +63,7 @@ ob_end_flush();
                         var typeNumber = 4;
                         var errorCorrectionLevel = 'L';
                         var qr = qrcode(typeNumber, errorCorrectionLevel);
-                        var url = 'https://ptbci.com/member="'+<?php echo $id?>+'"'
+                        var url = 'https://ptbci.com/member='+<?php echo $id?>+''
                         qr.addData(url);
                         qr.make();
                         var img = qr.createDataURL()

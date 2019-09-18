@@ -50,13 +50,14 @@ export default class App extends Component {
     if (result.data !== this.state.lastScannedUrl) {
     //obtain qrcode number from the scanned data
       var qrcode = this._obtainqrcode(result.data)
-      
+
       //fetch result from the server with the function fetchAsync with the qrcode no scanned
       this.fetchAsync(qrcode)
-      .then(data => function() {
-        this.setState({qrcodeInfo: data})
-        alert(data['fname']+ " " + data['lname'])
-      }) //function to handle the response from the server
+      .then(data => {
+        this.setState({qrcodeInfo:data})
+        console.log(this.state.qrcodeInfo['fname'])
+      }
+        ) //function to handle the response from the server
       .catch(reason => console.log(reason.message)) // Handle any errors that may arise from fetch 
       //fecth qrcode information from qrcodes.php
       
@@ -127,6 +128,10 @@ fetchAsync = async (qrcode) => {
     );
   };
 
+  //mark member as present
+  _markattendance = (membercode) => {
+    
+  }
   _handlePressCancel = () => {
     this.setState({ lastScannedUrl: null });
   };
