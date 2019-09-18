@@ -13,6 +13,22 @@ export default class App extends Component {
 
   componentDidMount() {
     this._requestCameraPermission();
+    //set a deadline to push the marked attendance unto the server
+    var date = new Date()
+    //set deadline time 1min from current
+    date.setMinutes(date.getMinutes() + 1)
+    var deadline = date.getTime()
+
+    //set an interval
+    var x = setInterval(function() { 
+    var now = new Date().getTime(); 
+    var t = deadline - now; 
+        if (t < 0) { 
+            clearInterval(x); 
+            //call function to push marked attendance to the server
+            
+        } 
+    }, 1000);
   }
 
   _requestCameraPermission = async () => {
@@ -135,22 +151,29 @@ fetchAsync = async (qrcode) => {
   _markattendance = (membercode, timestamp) => {
     //check if member has already been added
     if(this.state.attendance.hasOwnProperty(membercode)){
-      alert("Already marked for "+this.state.qrcodeInfo['fname'])
+      alert("Already marked for "+this.state.qrcodeInfo['fname']+" "+ this.state.qrcodeInfo['lname'])
     }
     //else add to attendance
     else {
-      //concatenate the attendance object with the scanned url
+      //concatenate the attendance object with the scanned qrcode
     this.setState({
       attendance: {
         ...this.state.attendance,
         [membercode]: timestamp
       }
     })
-    console.log(this.state.attendance)//output the attendance data
-    console.log(this.state.qrcodeInfo)
+    //testing phase
+    /*console.log(this.state.attendance)//output the attendance data
+    console.log(this.state.qrcodeInfo)*/
     }
     
   }
+
+  //a function to push data unto the server
+  _pushattendane = () => {
+    //handle the pushing unto the server
+  }
+
   _handlePressCancel = () => {
     this.setState({ lastScannedUrl: null });
   };

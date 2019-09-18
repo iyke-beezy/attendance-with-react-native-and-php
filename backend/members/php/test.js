@@ -68,4 +68,10 @@ var url = 'https://slitcorp.com/attendance/qrcodes.php'
       
 */
 var date = new Date()
-console.log(date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())
+var now = date.getTime()
+date.setHours(date.getHours()+3)
+var future = date.getTime()
+var deadline = new Date("dec 31, 2019 15:37:25").getTime()
+console.log(date.getTime())
+console.log(now)
+console.log(deadline)
