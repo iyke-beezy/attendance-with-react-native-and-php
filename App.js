@@ -117,6 +117,22 @@ fetchAsync = async (qrcode) => {
     return data;
   }
 
+  //to push attendance data unto the server
+  _pushAsync = async (attendance) => {
+    const member = {
+      data: attendance
+    }
+    let response = await fetch('https://slitcorp.com/attendance/uploadattendance.php', {
+      method: 'POST',
+      headers: { "Content-type": "application/x-www-form-urlencoded"},
+      body: this._formEncode(member)
+    })
+
+    let data = await response.json();
+    // only proceed once second promise is resolved
+    return data;
+  }
+
     //extract the actual qrcode from the scanned url
   _obtainqrcode = (url) => {
     var spliturl = url.split("/");
@@ -163,8 +179,8 @@ fetchAsync = async (qrcode) => {
       }
     })
     //testing phase
-    /*console.log(this.state.attendance)//output the attendance data
-    console.log(this.state.qrcodeInfo)*/
+    console.log(this.state.attendance)//output the attendance data
+    console.log(this.state.qrcodeInfo)
     }
     
   }
@@ -172,6 +188,11 @@ fetchAsync = async (qrcode) => {
   //a function to push data unto the server
   _pushattendane = () => {
     //handle the pushing unto the server
+    var attendance = this.state.attendance
+    this._pushAsync(attendance)
+    .then(data => console.log(data))
+    .catch(reason => console.log(reason.message))
+
   }
 
   _handlePressCancel = () => {

@@ -8,10 +8,10 @@ require ('dbconnect.php');
 //$obj = json_decode($json, true);
 
 //store qrcode url as $qrcode
-$qrcodenumber = $_POST['qrcodeno'];
+$qrcodenumber = $_POST['attendance'];
 
 //check if the qrcode number exist in our database
-if($stmt = $con->prepare('SELECT fname, lname, oname FROM members WHERE id = ? ')){
+/*if($stmt = $con->prepare('SELECT fname, lname, oname FROM members WHERE id = ? ')){
     $stmt->bind_param('s', $qrcodenumber);
     $stmt->execute();
     //store result obtained from the query and check if there exists any qrcode
@@ -32,6 +32,7 @@ if($stmt = $con->prepare('SELECT fname, lname, oname FROM members WHERE id = ? '
     }
 
 }
-
+*/
+echo json_encode("success");
 
 ?>
